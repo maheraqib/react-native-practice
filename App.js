@@ -1,20 +1,26 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import HomeScreen from './components/Screens/HomeScreen';
+import DetailsScreen from './components/Screens/DetailsScreen';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
 
-export default function App() {
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <GestureHandlerRootView  style={styles.container}>
+      <ScrollView>
+
+      <HomeScreen />
+      </ScrollView>
+   
+    
+    </GestureHandlerRootView >
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
+
+export default App;
