@@ -10,12 +10,58 @@ import {
 } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Modal, TextInput } from "react-native";
+import Entypo from "react-native-vector-icons/Entypo";
+
 
 export default function ClinicDetailsScreen() {
   const [activeTab, setActiveTab] = useState("Reviews");
   const [showModal, setShowModal] = useState(false);
   const [reviewText, setReviewText] = useState("");
+  const [rating, setRating] = useState(0);
 
+  const reviews = [
+    {
+      id: 1,
+      name: "Jonathan Randy",
+      review: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      ratings: 1,
+      Image:
+        "https://fastly.picsum.photos/id/5/5000/3334.jpg?hmac=R_jZuyT1jbcfBlpKFxAb0Q3lof9oJ0kREaxsYV3MgCc",
+    },
+    {
+      id: 2,
+      name: "Jonathan Randy",
+      review: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      ratings: 2,
+      Image:
+        "https://fastly.picsum.photos/id/5/5000/3334.jpg?hmac=R_jZuyT1jbcfBlpKFxAb0Q3lof9oJ0kREaxsYV3MgCc",
+    },
+    {
+      id: 3,
+      name: "Jonathan Randy",
+      review: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      ratings: 3,
+      Image:
+        "https://fastly.picsum.photos/id/5/5000/3334.jpg?hmac=R_jZuyT1jbcfBlpKFxAb0Q3lof9oJ0kREaxsYV3MgCc",
+    },
+    {
+      id: 4,
+      name: "Jonathan Randy",
+      review: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      ratings: 4,
+      Image:
+        "https://fastly.picsum.photos/id/2/5000/3333.jpg?hmac=_KDkqQVttXw_nM-RyJfLImIbafFrqLsuGO5YuHqD-qQ",
+    },
+    {
+      id: 5,
+      name: "Jonathan Randy",
+      review: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      ratings: 5,
+      Image:
+        "https://fastly.picsum.photos/id/5/5000/3334.jpg?hmac=R_jZuyT1jbcfBlpKFxAb0Q3lof9oJ0kREaxsYV3MgCc",
+    },
+  ];
+  const [reviewslist, setReviewsList] = useState(reviews);
   const renderContent = () => {
     switch (activeTab) {
       case "About":
@@ -28,12 +74,36 @@ export default function ClinicDetailsScreen() {
       case "Reviews":
         return (
           <View style={styles.reviewContainer}>
-            {[1, 2, 3, 4].map((item, index) => (
-              <View key={index} style={styles.reviewCard}>
-                <Text style={styles.reviewerName}>Jonathan Randy</Text>
-                <Text style={styles.reviewText}>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                </Text>
+            {reviewslist.map((item) => (
+              <View key={item.id} style={styles.reviewCard}>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
+                    <Image
+                      source={{ uri: item.Image }}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        borderRadius: 20,
+                        marginRight: 10,
+                      }}
+                    />
+                    <Text style={styles.reviewerName}>{item.name}</Text>
+                  </View>
+                  <View style={{ flexDirection: "row" }}>
+                    {[...Array(item.ratings)].map(() => {
+                      return <Entypo name="star" color="gold" size={20} />;
+                    })}
+                    {[...Array(5 - item.ratings)].map(() => {
+                      return <Entypo name="star" color="gray" size={20} />;
+                    })}
+                  </View>
+                </View>
+                <Text style={styles.reviewText}>{item.review}</Text>
               </View>
             ))}
           </View>
@@ -96,7 +166,24 @@ export default function ClinicDetailsScreen() {
         >
           <View style={styles.modalOverlay}>
             <View style={styles.modalBox}>
+              <View style ={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={styles.modalTitle}>Write A Review</Text>
+                  <TouchableOpacity onPress={()=> setShowModal(false)}>
+                    <Entypo name="cross" color="#000" size={26} />
+                  </TouchableOpacity>
+              </View>
+              <View style={{ flexDirection: "row", marginBottom: 10 }}>
+                {[1, 2, 3, 4, 5].map((star) => (
+                  <TouchableOpacity key={star} onPress={() => setRating(star)}>
+                    <Entypo
+                      name="star"
+                      size={24}
+                      color={star <= rating ? "gold" : "gray"}
+                    />
+                  </TouchableOpacity>
+                ))}
+              </View>
+
               <TextInput
                 placeholder="Type your review..."
                 value={reviewText}
@@ -105,13 +192,38 @@ export default function ClinicDetailsScreen() {
                 multiline
               />
               <TouchableOpacity
-                onPress={() => {
-                  setShowModal(false);
-                }}
-                style={styles.submitButton}
-              >
-                <Text style={styles.submitText}>Submit</Text>
-              </TouchableOpacity>
+  onPress={() => {
+    if (rating === 0) {
+      alert("Please select a rating.");
+      return;
+    }
+
+    if (reviewText.trim() === "") {
+      alert("Please write a review.");
+      return;
+    }
+    const user = {
+  name: "Alice Smith",
+  image: "https://i.pravatar.cc/150?img=5",
+};
+    const newReview = {
+      id: reviewslist.length + 1,
+      name: user.name,
+      review: reviewText.trim(),
+      ratings: rating,
+      Image: user.image,
+    };
+
+    setReviewsList([newReview, ...reviewslist]);
+    setShowModal(false);
+    setReviewText("");
+    setRating(0);
+  }}
+  style={styles.submitButton}
+>
+  <Text style={styles.submitText}>Submit</Text>
+</TouchableOpacity>
+
             </View>
           </View>
         </Modal>

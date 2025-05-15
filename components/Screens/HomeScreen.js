@@ -1,23 +1,29 @@
-import React from 'react';
-import { View, Text, StyleSheet, ImageBackground, SafeAreaView } from 'react-native';
+import React, { use } from 'react';
+import { View, Text, StyleSheet, ImageBackground, SafeAreaView, TouchableOpacity } from 'react-native';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import DetailsScreen from './DetailsScreen';
 import TabBar from './TabBar';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, ScrollView } from 'react-native-gesture-handler';
+import { Touchable } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 function HomeScreen() {
+  const navigation = useNavigation(); 
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <ScrollView style={styles.container}>
      
       <ImageBackground source={require ('../Screens/images/background-image.jpg')} style = {styles.coverImage}>
       <View style = {styles.imageContentContainer}>
-        <Text style = {styles.icon}> <AntDesign name="arrowleft" color="#fff" size={24} /> </Text>
+        <TouchableOpacity onPress={()=> navigation.navigate('UserDetails')}>
+          <Text style = {styles.icon}> <AntDesign name="arrowleft" color="#fff" size={24} /> </Text>
+        </TouchableOpacity>
+        
         <Text style = {styles.aboutText}> About Clinic </Text>
       </View>
       </ImageBackground>
       
       <DetailsScreen/>
       <TabBar/>
-    </GestureHandlerRootView>
+    </ScrollView>
   );
 }
 
